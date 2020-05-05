@@ -39,13 +39,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.io.InputStream;
+
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     LineChart mChart;
-    public String message = "";
-    public String pesan = "";
+    String pesanutuh="";
+    double nilai = 0;
     private Button start;
+    private EditText editText;
     private TextView output;
+    private InputStream inputStream;
     private OkHttpClient client;
 
 
@@ -64,15 +68,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("Hello, it's Bro");
-            webSocket.send("What's up ?");
-            webSocket.send(ByteString.decodeHex("deadbeef"));
+//            webSocket.send("Hello, it's Bro");
+//            webSocket.send("What's up ?");
+//            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
         }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            output("Receiving : " + text);
-            JSON(text);
+            output(text);
         }
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         start = (Button) findViewById(R.id.start);
         output = (TextView) findViewById(R.id.output);
         output.setMovementMethod(new ScrollingMovementMethod());
+        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +107,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 start();
             }
         });
-
-        setTitle("RealtimeLineChartActivity");
 
         mChart = findViewById(R.id.line_chart);
         mChart.setOnChartValueSelectedListener(this);
@@ -214,43 +216,42 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         return set;
     }
 
-    String pesanutuh="";
-    private void JSON(String pesan){
-        final Thread thread = new Thread(new Runnable() {
-            int tekanan1 = 0;
-            int tekanan = 0;
-            @Override
-            public void run() {
-                try {
-                   JSONObject Json = new JSONObject(pesan);
-                   tekanan1 = Json.getInt("tekanan1");
-                } catch (JSONException e) {
-//                    e.printStackTrace();
-                }
-                final int tekanan = tekanan1;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addEntry(tekanan);
-                    }
-                });
-            }
-        });
-    }
+//    String pesanutuh="";
+//    private void JSON(String pesan){
+//           try {
+//               JSONObject OBJ = new JSONObject(pesanutuh);
+//               double nilai = OBJ.optDouble("tekanan1", 0.0);
+//               addEntry((float)nilai);
+//           } catch (JSONException e) {
+//               e.printStackTrace();
+//               ((EditText) MainActivity.this.findViewById(R.id.editText)).setText("\n---Pesan---\n" + e.getMessage() + "\n---Errornya---\n" + e.toString());
+//           }
+//    }
 
-
-    private void start() {
-        Request request = new Request.Builder().url("ws://10.39.26.107:80/test").build();
+    String txt = "";
+    public void start() {
+        Request request = new Request.Builder().url("ws://192.168.43.38:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
-    private void output(final String txt) {
+    public void output(String txt) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                output.setText(output.getText().toString() + "\n\n" + txt);
+                output.setText(txt);
+                pesanutuh = txt;
+                try {
+                    String isi = output.getText().toString();
+                    JSONObject OBJ = new JSONObject(isi);
+                    nilai = OBJ.optDouble("tekanan1", 0.0);
+                    addEntry((float) nilai);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    ((EditText) MainActivity.this.findViewById(R.id.editText)).setText("\n---Pesan---\n" + e.getMessage() + "\n---Errornya---\n" + e.toString());
+                }
             }
         });
     }
+
 }

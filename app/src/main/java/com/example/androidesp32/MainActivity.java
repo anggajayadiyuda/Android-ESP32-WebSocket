@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     LineChart mChart;
     public String message = "";
     public String pesan = "";
-    private TextView display;
     private Button start;
     private TextView output;
     private OkHttpClient client;
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         start = (Button) findViewById(R.id.start);
         output = (TextView) findViewById(R.id.output);
+        output.setMovementMethod(new ScrollingMovementMethod());
         client = new OkHttpClient();
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,21 +216,26 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     String pesanutuh="";
     private void JSON(String pesan){
-        if(pesan.contains("{"))
-            pesanutuh=pesan;
-        else if (pesan.contains("}")) {
-            pesanutuh+=pesan;
-            pesanutuh=pesanutuh.replace("\\s","");
-            try {
-                JSONObject obj = new JSONObject(pesanutuh);
-                double nilai = obj.optDouble("tekanan1",0.0);
-                addEntry((float)nilai);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        final Thread thread = new Thread(new Runnable() {
+            int tekanan1 = 0;
+            int tekanan = 0;
+            @Override
+            public void run() {
+                try {
+                   JSONObject Json = new JSONObject(pesan);
+                   tekanan1 = Json.getInt("tekanan1");
+                } catch (JSONException e) {
+//                    e.printStackTrace();
+                }
+                final int tekanan = tekanan1;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addEntry(tekanan);
+                    }
+                });
             }
-            pesanutuh="";
-        }else
-            pesanutuh+=pesan;
+        });
     }
 
 

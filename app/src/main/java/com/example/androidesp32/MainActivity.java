@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     String txt = "";
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.201:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.201:80/test/").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
@@ -374,7 +374,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void run() {
                 output.setText(txt);
-                String isi = output.getText().toString();
+
+                String[] isisemua = output.getText().toString().split("\\}");
+                String isi = isisemua[isisemua.length - 1] + "}";
+
 //                try {
 //                    JSON(isi);
 //                } catch (Exception e) {
@@ -391,7 +394,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                         addEntry2((float) nilai2);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    ((EditText) MainActivity.this.findViewById(R.id.editText)).setText("\n---Pesan---\n" + e.getMessage() + "\n---Errornya---\n" + e.toString());
                 }
             }
         });

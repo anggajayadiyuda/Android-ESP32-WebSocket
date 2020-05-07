@@ -9,8 +9,8 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"
-        android:layout_width="1031dp"
-        android:layout_height="252dp"
+        android:layout_width="1108dp"
+        android:layout_height="262dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -23,18 +23,18 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart1"
         android:layout_width="0dp"
-        android:layout_height="252dp"
+        android:layout_height="262dp"
         app:layout_constraintEnd_toEndOf="@+id/line_chart"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/line_chart"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_chart"></com.github.mikephil.charting.charts.LineChart>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart2"
         android:layout_width="0dp"
-        android:layout_height="252dp"
+        android:layout_height="262dp"
         app:layout_constraintEnd_toEndOf="@+id/line_chart1"
-        app:layout_constraintStart_toStartOf="@+id/line_chart1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_chart1"></com.github.mikephil.charting.charts.LineChart>
 
     <Button
@@ -62,35 +62,22 @@
     <TextView
         android:id="@+id/output"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="232dp"
         android:layout_above="@+id/start"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:gravity="bottom"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbars="vertical"
-        android:textSize="12sp"
+        android:gravity="end"
         android:textColor="#ffffff"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/line_chart"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="1195dp"
-        android:layout_height="0dp"
-        android:ems="8"
-        android:textSize="8sp"
-        android:textColor="#ffffff"
-        app:layout_constraintBottom_toBottomOf="@+id/start"
-        app:layout_constraintEnd_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/line_chart2"
-        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

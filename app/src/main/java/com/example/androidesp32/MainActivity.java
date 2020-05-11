@@ -62,12 +62,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     }
 
-    private final class EchoWebSocketListener extends WebSocketListener {
+    private class EchoWebSocketListener extends WebSocketListener {
         private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             webSocket.send("1");
-
 //            webSocket.send("What's up ?");
 //            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
@@ -90,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             output("Error : " + t.getMessage());
         }
     }
+    private class EchoWebSocketListenerStop extends WebSocketListener {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+        @Override
+        public void onOpen(WebSocket webSocket, Response responseStop) {
+            webSocket.send("0");
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +108,12 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 //        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
 
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stop();
+            }
+        });
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         // enable scaling and dragging
         Description description = new Description();
         description.setText("Data Tekanan Sensor 1");
+        description.setTextColor(Color.WHITE);
+        description.setTextSize(8);
         mChart.setDescription(description);
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
@@ -177,6 +191,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart1.setOnChartValueSelectedListener(this);
         mChart1.getDescription().setEnabled(false);
         mChart1.setTouchEnabled(true);
+        Description description = new Description();
+        description.setText("Data Tekanan Sensor 2");
+        description.setTextColor(Color.WHITE);
+        description.setTextSize(8);
+        mChart1.setDescription(description);
         mChart1.setDragEnabled(true);
         mChart1.setScaleEnabled(true);
         mChart1.setDrawGridBackground(false);
@@ -212,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart2.setOnChartValueSelectedListener(this);
         mChart2.getDescription().setEnabled(false);
         mChart2.setTouchEnabled(true);
+        Description description = new Description();
+        description.setText("Data Tekanan Sensor 3");
+        description.setTextColor(Color.WHITE);
+        description.setTextSize(8);
+        mChart2.setDescription(description);
         mChart2.setDragEnabled(true);
         mChart2.setScaleEnabled(true);
         mChart2.setDrawGridBackground(false);
@@ -375,6 +399,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         Request request = new Request.Builder().url("ws://192.168.137.158:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+    }
+
+    public void stop(){
+        Request requestStop = new Request.Builder().url("ws://192.168.137.158:80/test").build();
+        EchoWebSocketListenerStop listenerStop = new EchoWebSocketListenerStop();
+        WebSocket ws = client.newWebSocket(requestStop, listenerStop);
         client.dispatcher().executorService().shutdown();
     }
 

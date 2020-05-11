@@ -38,7 +38,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="U8BBB20415100023" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RR2M400CMRP" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -56,6 +56,7 @@
       <list>
         <option value="Interface" />
         <option value="resourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -73,6 +74,9 @@
   </component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="com.example.androidesp32" />
+    </key>
+    <key name="CreateClassDialog.RecentsKey">
       <recent name="com.example.androidesp32" />
     </key>
     <key name="MoveFile.RECENT_KEYS">

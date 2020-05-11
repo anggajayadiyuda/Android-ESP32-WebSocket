@@ -1,0 +1,109 @@
+#include <ArduinoJson.h>
+
+#include <WebSockets.h>
+#include <WebSocketsClient.h>
+#include <WebSocketsServer.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+
+int tekanan1, tekanan2, tekanan3, Terima = 0;
+String data_terima = "";
+
+const char* ssid      = "J2";
+const char* password  = "bayar3ratusribu";
+WiFiServer server(80);
+
+unsigned char start_flag = 0xAA;
+unsigned char end_flag = 0xFF;
+unsigned char ip_flag = 0x11;
+
+WebSocketsServer webSocket(80);    // create a websocket server on port 81
+WebSocketsClient webSocketClient;
+
+void startWebSocket() { // Start a WebSocket server
+  webSocket.begin();                          // start the websocket server
+  webSocket.onEvent(webSocketEvent);          // if there's an incomming websocket message, go to function 'webSocketEvent'
+  Serial.println("WebSocket server started.");
+}
+
+void startWebServer()
+{
+   server.begin();
+   Serial.println("Http web server started.");
+
+void webSocketEvent(uint8_t num, WStype_t type,uint8_t *  payload, size_t payloadlength) { // When a WebSocket message is received
+ 
+  char ipaddr[26] ;
+  IPAddress localip;
+  
+  switch (type) {
+    case WStype_DISCONNECTED:             // if the websocket is disconnected
+      Serial.printf("[%u] Disconnected!\n", num);
+      break;
+    case WStype_CONNECTED: {              // if a new websocket connection is established
+        IPAddress ip = webSocket.remoteIP(num);
+        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+           webSocket.sendBIN(0, &ip_flag, 1);
+           localip = WiFi.localIP();
+           sprintf(ipaddr, "%d.%d.%d.%d", localip[0], localip[1], localip[2], localip[3]);
+           webSocket.sendTXT(0, (const char *)ipaddr);
+           
+      }
+      break;
+    case WStype_TEXT:                     // if new text data is received
+//    webSocket.sendTXT(0, "HALOOO");
+      data_terima = Serial.printf("%s", payload);
+//      Serial.println(data_terima);
+      break;
+    case WStype_ERROR:                     // if new text data is received
+      Serial.printf("Error \n");
+    default:
+      Serial.printf("WStype %x not handled \n", type);
+
+  }
+}
+
+void initWifiStation() {
+    WiFi.begin(ssid, password);    
+    Serial.print("\nConnecting to WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+       delay(1000);        
+       Serial.print(".");
+    }
+    Serial.println(String("\nConnected to the WiFi network (") + ssid + ")" );
+    Serial.print("\nStation IP address: ");
+    Serial.println(WiFi.localIP()); 
+
+}
+
+void setup() {
+  Serial.begin(115200);
+  initWifiStation();
+  startWebSocket();
+  startWebServer();
+
+  randomSeed(185);
+}
+
+void loop()
+{
+  webSocket.loop();
+         if(data_terima == "1"){
+         String data = "";;
+         tekanan1 = random(-50, 100);
+         tekanan2 = random(-50, 100);
+         tekanan3 = random(-50, 100);
+         
+         StaticJsonDocument<100> doc;
+
+         doc["tekanan1"] = tekanan1;
+         doc["tekanan2"] = tekanan2;
+         doc["tekanan3"] = tekanan3;  
+         serializeJsonPretty(doc, data);
+          webSocket.sendTXT(0, data);
+          Serial.println(data);
+          Serial.print("Terima = ");
+          Serial.println(data_terima);
+          delay(50);
+  } 
+}

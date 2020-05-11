@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,22 +22,16 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.InputStream;
 
@@ -52,10 +45,12 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     public String pesan = "";
     public String pesanascii = "";
     private Button start;
+    private Button stop;
     private EditText editText;
     private TextView output;
     private InputStream inputStream;
     private OkHttpClient client;
+    private Object WebSocket;
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -104,27 +99,39 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 //        output.setMovementMethod(new ScrollingMovementMethod());
 //        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
+
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 start();
             }
         });
-
+        stop();
     chartmChart();
     chartmChart1();
     chartmChart2();
     chartmChart2();
 
-        long now = 0;
-        now = System.currentTimeMillis();
-                if(now >= 5000){
-                    output.setText(R.string.Default);
-                    now = 0;
-                    mChart.clearValues();
-                    mChart1.clearValues();
-                    mChart2.clearValues();
+//        long now = 0;
+//        now = System.currentTimeMillis();
+//                if(now >= 600000){
+//                    output.setText(R.string.Default);
+//                    now = 0;
+//                    mChart.clearvalue();
+//                    mChart1.clearvalue();
+//                    mChart2.clearvalue();
+//                }
+    }
+
+    public void stop(WebSocket webSocket, String text){
+            stop = (Button) findViewById(R.id.stop);
+            stop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    webSocket.send("0");
                 }
+            });
     }
 
     public void chartmChart(){
@@ -231,6 +238,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 //        l.setTypeface(tfLight);
         l.setTextColor(Color.WHITE);
         XAxis xl = mChart2.getXAxis();
+//        xl.setAxisMaximum(200);
+//        xl.setAxisMinimum(0);
+//        xl.setAxisMaxValue(200);
 //        xl.setTypeface(tfLight);
         xl.setTextColor(Color.WHITE);
         xl.setDrawGridLines(false);
@@ -309,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart.setVisibleXRangeMaximum(200);
+            mChart.setVisibleXRangeMaximum(600);
             // move to the latest entry
             mChart.moveViewToX(data.getEntryCount());
             mChart.invalidate();
@@ -334,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart1.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart1.setVisibleXRangeMaximum(200);
+            mChart1.setVisibleXRangeMaximum(600);
             // move to the latest entry
             mChart1.moveViewToX(data1.getEntryCount());
             mChart1.invalidate();
@@ -359,33 +369,36 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart2.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart2.setVisibleXRangeMaximum(200);
+            mChart2.setVisibleXRangeMaximum(600);
             // move to the latest entry
             mChart2.moveViewToX(data2.getEntryCount());
+
             mChart2.invalidate();
             // this automatically refreshes the chart (calls invalidate())
-            // chart.moveViewTo(data.getXValCount()-7, 55f,
+//            mChart2.moveViewTo(data2.getXValCount()-7, 55f,);
             // AxisDependency.LEFT);
         }
     }
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.106:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.49:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
+    public void stop() {
 
+    }
 
     public void output(String txt) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 output.setText(txt);
-                String[] isisemua = output.getText().toString().split("\\}");
-                String isi = isisemua[isisemua.length - 1] + "}";
+//                String[] isisemua = output.getText().toString().split("\\}");
+//                String isi = isisemua[isisemua.length - 1] + "}";
                 try {
-//                    String isi = output.getText().toString();
+                    String isi = output.getText().toString();
                     JSONObject OBJ = new JSONObject(isi);
                         nilai = OBJ.optDouble("tekanan1", 0.0);
                         nilai1 = OBJ.optDouble("tekanan2", 0.0);
@@ -394,6 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                         addEntry1((float) nilai1);
                         addEntry2((float) nilai2);
 //                        Thread.sleep(500);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
 //                    ((EditText) MainActivity.this.findViewById(R.id.editText)).setText("\n---Pesan---\n" + e.getMessage() + "\n---Errornya---\n" + e.toString());

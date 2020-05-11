@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Android ESP32</string>
+    <string name="app_name">Aplikasi Ventilator</string>
+    <string name="Default"></string>
 </resources>

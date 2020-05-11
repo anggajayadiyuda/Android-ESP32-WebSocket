@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             webSocket.send("1");
+
 //            webSocket.send("What's up ?");
 //            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
         start = (Button) findViewById(R.id.start);
         output = (TextView) findViewById(R.id.output);
+        stop = (Button) findViewById(R.id.stop);
 //        output.setMovementMethod(new ScrollingMovementMethod());
 //        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
@@ -107,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 start();
             }
         });
-        stop();
     chartmChart();
     chartmChart1();
     chartmChart2();
@@ -122,16 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 //                    mChart1.clearvalue();
 //                    mChart2.clearvalue();
 //                }
-    }
-
-    public void stop(WebSocket webSocket, String text){
-            stop = (Button) findViewById(R.id.stop);
-            stop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    webSocket.send("0");
-                }
-            });
     }
 
     public void chartmChart(){
@@ -385,9 +376,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
-    }
-    public void stop() {
-
     }
 
     public void output(String txt) {

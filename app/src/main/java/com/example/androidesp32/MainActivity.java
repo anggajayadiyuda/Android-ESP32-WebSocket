@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.49:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.158:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();

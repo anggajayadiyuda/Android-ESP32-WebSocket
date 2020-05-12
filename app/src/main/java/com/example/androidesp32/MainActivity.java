@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     private InputStream inputStream;
     private OkHttpClient client;
     private Object WebSocket;
+    WebSocket ws;
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -66,15 +68,15 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("1");
-
+//            webSocket.send("1");
+            output("Connected");
 //            webSocket.send("What's up ?");
 //            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
         }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            output(text);
+            output("Receiveng Message : "+text);
         }
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
@@ -100,13 +102,19 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         stop = (Button) findViewById(R.id.stop);
 //        output.setMovementMethod(new ScrollingMovementMethod());
 //        editText = (EditText) findViewById(R.id.editText);
-        client = new OkHttpClient();
 
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 start();
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stop();
             }
         });
     chartmChart();
@@ -323,7 +331,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         LineData data1 = mChart1.getData();
         if (data1 != null) {
             ILineDataSet set = data1.getDataSetByIndex(0);
-            // set.addEntry(...); // can be called as well
+            // set.addEntry(...); // can
+            // be called as well
             if (set == null) {
                 set = createSet1();
                 data1.addDataSet(set);
@@ -372,10 +381,22 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.158:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.188:80/test/").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
-        WebSocket ws = client.newWebSocket(request, listener);
+        client = new OkHttpClient();
+        ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
+    }
+
+    public void stop(){
+        JSONObject kirim=new JSONObject();
+        try {
+            kirim.put("data","Berhenti");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        ws.send(kirim.toString());
+        ws.close(1000,null);
     }
 
     public void output(String txt) {
@@ -383,6 +404,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void run() {
                 output.setText(txt);
+                Log.d("IsiOutput",txt);
 //                String[] isisemua = output.getText().toString().split("\\}");
 //                String isi = isisemua[isisemua.length - 1] + "}";
                 try {

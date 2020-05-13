@@ -2,6 +2,7 @@ package com.example.androidesp32;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import okhttp3.internal.ws.WebSocketWriter;
 import okio.ByteString;
 
 import com.github.mikephil.charting.components.Legend;
@@ -39,18 +41,20 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     LineChart mChart;
     LineChart mChart1;
-    LineChart mChart2;
     String pesanutuh="";
-    double nilai, nilai1, nilai2 = 0;
+    double maskP, flow, PeakPress, PEEP, Tidal_Vol_INS, Tidal_Vol_EXP, Min_Vol_EXP = 0;
     public String pesan = "";
     public String pesanascii = "";
     private Button start;
     private Button stop;
     private EditText editText;
     private TextView output;
+    private TextView NilaiPeakPressure;
+    private TextView PEEPText;
+    private TextView INS_View, EXP_View, Min_View;
     private InputStream inputStream;
     private OkHttpClient client;
-    private Object WebSocket;
+    private WebSocket WebSocket;
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -104,6 +108,12 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         start = (Button) findViewById(R.id.start);
         output = (TextView) findViewById(R.id.output);
         stop = (Button) findViewById(R.id.stop);
+        NilaiPeakPressure = (TextView) findViewById(R.id.NilaiPeakPressure);
+        PEEPText = (TextView) findViewById(R.id.NilaiPEEP);
+        INS_View = (TextView) findViewById(R.id.VolIns);
+        EXP_View = (TextView) findViewById(R.id.VolExp);
+        Min_View = (TextView) findViewById(R.id.MinuteVolExp);
+
 //        output.setMovementMethod(new ScrollingMovementMethod());
 //        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
@@ -123,8 +133,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         });
     chartmChart();
     chartmChart1();
-//    chartmChart2();
-//    chartmChart2();
 
 //        long now = 0;
 //        now = System.currentTimeMillis();
@@ -226,50 +234,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         YAxis rightAxis = mChart1.getAxisRight();
         rightAxis.setEnabled(false);
     }
-//    public void chartmChart2(){
-//        mChart2 = findViewById(R.id.line_chart2);
-//        mChart2.setOnChartValueSelectedListener(this);
-//        mChart2.getDescription().setEnabled(false);
-//        mChart2.setTouchEnabled(true);
-//        Description description = new Description();
-//        description.setText("Data Tekanan Sensor 3");
-//        description.setTextColor(Color.WHITE);
-//        description.setTextSize(8);
-//        mChart2.setDescription(description);
-//        mChart2.setDragEnabled(true);
-//        mChart2.setScaleEnabled(true);
-//        mChart2.setDrawGridBackground(false);
-//        mChart2.setPinchZoom(false);
-////        mChart2.setBackgroundColor(Color.BLACK);
-//        mChart2.setDrawBorders(true);
-//        mChart2.setBorderColor(Color.WHITE);
-//        mChart2.setBorderWidth(1);
-//        LineData data2 = new LineData();
-//        data2.setValueTextColor(Color.WHITE);
-//        mChart2.setData(data2);
-//        Legend l = mChart2.getLegend();
-//
-//        l.setForm(Legend.LegendForm.LINE);
-////        l.setTypeface(tfLight);
-//        l.setTextColor(Color.WHITE);
-//        XAxis xl = mChart2.getXAxis();
-////        xl.setAxisMaximum(200);
-////        xl.setAxisMinimum(0);
-////        xl.setAxisMaxValue(200);
-////        xl.setTypeface(tfLight);
-//        xl.setTextColor(Color.WHITE);
-//        xl.setDrawGridLines(false);
-//        xl.setAvoidFirstLastClipping(true);
-//        xl.setEnabled(true);
-//        YAxis leftAxis = mChart2.getAxisLeft();
-////        leftAxis.setTypeface(tfLight);
-//        leftAxis.setTextColor(Color.WHITE);
-////        leftAxis.setAxisMaximum(100f);
-////        leftAxis.setAxisMinimum(-50f);
-//        leftAxis.setDrawGridLines(true);
-//        YAxis rightAxis = mChart2.getAxisRight();
-//        rightAxis.setEnabled(false);
-//    }
+
     public LineDataSet createSet() {
         LineDataSet set = new LineDataSet(null, "Tekanan Masker");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -301,22 +266,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         set1.setDrawValues(false);
         set1.setDrawCircles(false);
         return set1;
-    }
-    public LineDataSet createSet2() {
-        LineDataSet set2 = new LineDataSet(null, "Tekanan 3");
-        set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set2.setColor(Color.MAGENTA);
-        set2.setCircleColor(ColorTemplate.getHoloBlue());
-        set2.setLineWidth(1f);
-        set2.setCircleRadius(4f);
-        set2.setFillAlpha(65);
-        set2.setFillColor(ColorTemplate.getHoloBlue());
-        set2.setHighLightColor(Color.rgb(244, 117, 117));
-        set2.setValueTextColor(Color.WHITE);
-        set2.setValueTextSize(9f);
-        set2.setDrawValues(false);
-        set2.setDrawCircles(false);
-        return set2;
     }
     public void addEntry(float value) {
         LineData data = mChart.getData();
@@ -352,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 set = createSet1();
                 data1.addDataSet(set);
             }
-            data1.addEntry(new Entry(set.getEntryCount(), (float) (value)), 0);
+            data1.addEntry(new Entry(set.getEntryCount(), value), 0);
 //            data1.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 45) + 21f), 0);
 //            System.out.println(set.getEntryCount());
             data1.notifyDataChanged();
@@ -368,49 +317,28 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // AxisDependency.LEFT);
         }
     }
-    public void addEntry2(float value) {
-        LineData data2 = mChart2.getData();
-        if (data2 != null) {
-            ILineDataSet set = data2.getDataSetByIndex(0);
-            // set.addEntry(...); // can be called as well
-            if (set == null) {
-                set = createSet2();
-                data2.addDataSet(set);
-            }
-            data2.addEntry(new Entry(set.getEntryCount(), (float) (value)), 0);
-//            data2.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 70) + 30f), 0);
-//            System.out.println(set.getEntryCount());
-            data2.notifyDataChanged();
-            // let the chart know it's data has changed
-            mChart2.notifyDataSetChanged();
-            // limit the number of visible entries
-            mChart2.setVisibleXRangeMaximum(400);
-            // move to the latest entry
-            mChart2.moveViewToX(data2.getEntryCount());
-
-            mChart2.invalidate();
-            // this automatically refreshes the chart (calls invalidate())
-//            mChart2.moveViewTo(data2.getXValCount()-7, 55f,);
-            // AxisDependency.LEFT);
-        }
-    }
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.171:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.188:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
     public void stop(){
-        Request requestStop = new Request.Builder().url("ws://192.168.137.171:80/test").build();
-        EchoWebSocketListenerStop listenerStop = new EchoWebSocketListenerStop();
-        WebSocket ws = client.newWebSocket(requestStop, listenerStop);
-        client.dispatcher().executorService().shutdown();
+        JSONObject kirim=new JSONObject();
+        try {
+            kirim.put("data","Berhenti");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        WebSocket.send(kirim.toString());
+        WebSocket.close(1000,null);
     }
 
     public void output(String txt) {
         runOnUiThread(new Runnable() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 output.setText(txt);
@@ -419,13 +347,22 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 try {
                     String isi = output.getText().toString();
                     JSONObject OBJ = new JSONObject(isi);
-                        nilai = OBJ.optDouble("maskP", 0.0);
-                        nilai1 = OBJ.optDouble("flow", 0.0);
-                        nilai2 = OBJ.optDouble("tekanan3", 0.0);
-                        addEntry((float) nilai);
-                        addEntry1((float) nilai1);
-                        addEntry2((float) nilai2);
+                        maskP= OBJ.optDouble("maskP", 0.0);
+                        flow = OBJ.optDouble("flow", 0.0);
+                        addEntry((float) maskP);
+                        addEntry1((float) flow);
+
+                    PeakPress = OBJ.optDouble("PeakPress", 0.0);
+                    PEEP = OBJ.optDouble("PEEP", 0.0);
+                    Tidal_Vol_INS = OBJ.optDouble("Tidal_Vol_INS", 0.0);
+                    Tidal_Vol_EXP = OBJ.optDouble("Tidal_Vol_EXP", 0.0);
+                    Min_Vol_EXP = OBJ.optDouble("Min_Vol_EXP", 0.0);
 //                        Thread.sleep(500);
+                    NilaiPeakPressure.setText(Integer.toString((int) PeakPress));
+                    PEEPText.setText(Integer.toString((int) PEEP));
+                    INS_View.setText(Integer.toString((int) Tidal_Vol_INS));
+                    EXP_View.setText(Integer.toString((int) Tidal_Vol_EXP));
+                    Min_View.setText(Double.toString(Min_Vol_EXP));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

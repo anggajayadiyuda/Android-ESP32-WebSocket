@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1c1c1c"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"
         android:layout_width="0dp"
-        android:layout_height="260dp"
+        android:layout_height="350dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -76,7 +77,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="140dp"
+        android:layout_width="200dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -305,7 +306,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView1"
-        android:layout_width="140dp"
+        android:layout_width="200dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
@@ -321,7 +322,7 @@
             android:layout_width="137dp"
             android:layout_height="68dp"
             android:layout_marginStart="30dp"
-            android:layout_marginLeft="0dp"
+            android:layout_marginLeft="66dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
@@ -330,7 +331,7 @@
             android:text="FIO2(%)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -345,12 +346,12 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:background="#EDEDED"
-            android:fontFamily="sans-serif-black"
             android:inputType="number"
             android:text="0"
             android:textAlignment="center"
             android:textColor="#64DD17"
             android:textSize="30dp"
+            android:fontFamily="sans-serif-black"
             tools:ignore="RtlCompat" />
 
         <TextView
@@ -367,7 +368,7 @@
             android:text="Tidal Volume (ml)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -404,7 +405,7 @@
             android:text="Respiratory Rate (l/min)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -419,12 +420,12 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:background="#EDEDED"
-            android:fontFamily="sans-serif-black"
             android:inputType="number"
             android:text="0"
             android:textAlignment="center"
             android:textColor="#64DD17"
             android:textSize="30dp"
+            android:fontFamily="sans-serif-black"
             tools:ignore="RtlCompat" />
 
         <TextView
@@ -441,7 +442,7 @@
             android:text="PEEP Set (cmH2O)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -456,12 +457,12 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:background="#EDEDED"
-            android:fontFamily="sans-serif-black"
             android:inputType="number"
             android:text="0"
             android:textAlignment="center"
             android:textColor="#64DD17"
             android:textSize="30dp"
+            android:fontFamily="sans-serif-black"
             tools:ignore="RtlCompat" />
 
         <TextView
@@ -478,7 +479,7 @@
             android:text="I:E Ratio"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -493,12 +494,12 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:background="#EDEDED"
-            android:fontFamily="sans-serif-black"
             android:inputType="number"
             android:text="0"
             android:textAlignment="center"
             android:textColor="#64DD17"
             android:textSize="30dp"
+            android:fontFamily="sans-serif-black"
             tools:ignore="RtlCompat" />
 
         <TextView
@@ -530,12 +531,12 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:background="#EDEDED"
-            android:fontFamily="sans-serif-black"
             android:inputType="number"
             android:text="0"
             android:textAlignment="center"
             android:textColor="#64DD17"
             android:textSize="30dp"
+            android:fontFamily="sans-serif-black"
             tools:ignore="RtlCompat" />
 
     </androidx.cardview.widget.CardView>
@@ -561,12 +562,13 @@
         android:text="Advanced View"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/Spontaneous"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/Spontaneous" />
 
     <Button
         android:id="@+id/Spontaneous"
-        android:layout_width="130dp"
+        android:layout_width="140dp"
         android:layout_height="0dp"
         android:layout_marginBottom="12dp"
         android:text="Spontaneous"

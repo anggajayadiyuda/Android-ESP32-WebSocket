@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         });
     chartmChart();
     chartmChart1();
-    chartmChart2();
-    chartmChart2();
+//    chartmChart2();
+//    chartmChart2();
 
 //        long now = 0;
 //        now = System.currentTimeMillis();
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart.setTouchEnabled(true);
         // enable scaling and dragging
         Description description = new Description();
-        description.setText("Data Tekanan Sensor 1");
+        description.setText("Tekanan Sensor di Masker");
         description.setTextColor(Color.WHITE);
         description.setTextSize(8);
         mChart.setDescription(description);
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart1.getDescription().setEnabled(false);
         mChart1.setTouchEnabled(true);
         Description description = new Description();
-        description.setText("Data Tekanan Sensor 2");
+        description.setText("Aliran Udara");
         description.setTextColor(Color.WHITE);
         description.setTextSize(8);
         mChart1.setDescription(description);
@@ -226,52 +226,52 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         YAxis rightAxis = mChart1.getAxisRight();
         rightAxis.setEnabled(false);
     }
-    public void chartmChart2(){
-        mChart2 = findViewById(R.id.line_chart2);
-        mChart2.setOnChartValueSelectedListener(this);
-        mChart2.getDescription().setEnabled(false);
-        mChart2.setTouchEnabled(true);
-        Description description = new Description();
-        description.setText("Data Tekanan Sensor 3");
-        description.setTextColor(Color.WHITE);
-        description.setTextSize(8);
-        mChart2.setDescription(description);
-        mChart2.setDragEnabled(true);
-        mChart2.setScaleEnabled(true);
-        mChart2.setDrawGridBackground(false);
-        mChart2.setPinchZoom(false);
-//        mChart2.setBackgroundColor(Color.BLACK);
-        mChart2.setDrawBorders(true);
-        mChart2.setBorderColor(Color.WHITE);
-        mChart2.setBorderWidth(1);
-        LineData data2 = new LineData();
-        data2.setValueTextColor(Color.WHITE);
-        mChart2.setData(data2);
-        Legend l = mChart2.getLegend();
-
-        l.setForm(Legend.LegendForm.LINE);
-//        l.setTypeface(tfLight);
-        l.setTextColor(Color.WHITE);
-        XAxis xl = mChart2.getXAxis();
-//        xl.setAxisMaximum(200);
-//        xl.setAxisMinimum(0);
-//        xl.setAxisMaxValue(200);
-//        xl.setTypeface(tfLight);
-        xl.setTextColor(Color.WHITE);
-        xl.setDrawGridLines(false);
-        xl.setAvoidFirstLastClipping(true);
-        xl.setEnabled(true);
-        YAxis leftAxis = mChart2.getAxisLeft();
-//        leftAxis.setTypeface(tfLight);
-        leftAxis.setTextColor(Color.WHITE);
-//        leftAxis.setAxisMaximum(100f);
-//        leftAxis.setAxisMinimum(-50f);
-        leftAxis.setDrawGridLines(true);
-        YAxis rightAxis = mChart2.getAxisRight();
-        rightAxis.setEnabled(false);
-    }
+//    public void chartmChart2(){
+//        mChart2 = findViewById(R.id.line_chart2);
+//        mChart2.setOnChartValueSelectedListener(this);
+//        mChart2.getDescription().setEnabled(false);
+//        mChart2.setTouchEnabled(true);
+//        Description description = new Description();
+//        description.setText("Data Tekanan Sensor 3");
+//        description.setTextColor(Color.WHITE);
+//        description.setTextSize(8);
+//        mChart2.setDescription(description);
+//        mChart2.setDragEnabled(true);
+//        mChart2.setScaleEnabled(true);
+//        mChart2.setDrawGridBackground(false);
+//        mChart2.setPinchZoom(false);
+////        mChart2.setBackgroundColor(Color.BLACK);
+//        mChart2.setDrawBorders(true);
+//        mChart2.setBorderColor(Color.WHITE);
+//        mChart2.setBorderWidth(1);
+//        LineData data2 = new LineData();
+//        data2.setValueTextColor(Color.WHITE);
+//        mChart2.setData(data2);
+//        Legend l = mChart2.getLegend();
+//
+//        l.setForm(Legend.LegendForm.LINE);
+////        l.setTypeface(tfLight);
+//        l.setTextColor(Color.WHITE);
+//        XAxis xl = mChart2.getXAxis();
+////        xl.setAxisMaximum(200);
+////        xl.setAxisMinimum(0);
+////        xl.setAxisMaxValue(200);
+////        xl.setTypeface(tfLight);
+//        xl.setTextColor(Color.WHITE);
+//        xl.setDrawGridLines(false);
+//        xl.setAvoidFirstLastClipping(true);
+//        xl.setEnabled(true);
+//        YAxis leftAxis = mChart2.getAxisLeft();
+////        leftAxis.setTypeface(tfLight);
+//        leftAxis.setTextColor(Color.WHITE);
+////        leftAxis.setAxisMaximum(100f);
+////        leftAxis.setAxisMinimum(-50f);
+//        leftAxis.setDrawGridLines(true);
+//        YAxis rightAxis = mChart2.getAxisRight();
+//        rightAxis.setEnabled(false);
+//    }
     public LineDataSet createSet() {
-        LineDataSet set = new LineDataSet(null, "Tekanan 1");
+        LineDataSet set = new LineDataSet(null, "Tekanan Masker");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(ColorTemplate.getHoloBlue());
         set.setCircleColor(ColorTemplate.getHoloBlue());
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         return set;
     }
     public LineDataSet createSet1() {
-        LineDataSet set1 = new LineDataSet(null, "Tekanan 2");
+        LineDataSet set1 = new LineDataSet(null, "Aliran Udara");
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
         set1.setColor(Color.rgb(0, 255, 0));
         set1.setCircleColor(ColorTemplate.getHoloBlue());
@@ -327,14 +327,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 set = createSet();
                 data.addDataSet(set);
             }
-            data.addEntry(new Entry(set.getEntryCount(), (float) (value)), 0);
+            data.addEntry(new Entry(set.getEntryCount(), value), 0);
 //            data.addEntry(new Entry(set.getEntryCount(), (float) (Math.random() * 76) + 30f), 0);
 //            System.out.println(set.getEntryCount());
             data.notifyDataChanged();
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart.setVisibleXRangeMaximum(600);
+            mChart.setVisibleXRangeMaximum(400);
             // move to the latest entry
             mChart.moveViewToX(data.getEntryCount());
             mChart.invalidate();
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart1.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart1.setVisibleXRangeMaximum(600);
+            mChart1.setVisibleXRangeMaximum(400);
             // move to the latest entry
             mChart1.moveViewToX(data1.getEntryCount());
             mChart1.invalidate();
@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart2.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart2.setVisibleXRangeMaximum(600);
+            mChart2.setVisibleXRangeMaximum(400);
             // move to the latest entry
             mChart2.moveViewToX(data2.getEntryCount());
 
@@ -396,14 +396,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.158:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.171:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
     public void stop(){
-        Request requestStop = new Request.Builder().url("ws://192.168.137.158:80/test").build();
+        Request requestStop = new Request.Builder().url("ws://192.168.137.171:80/test").build();
         EchoWebSocketListenerStop listenerStop = new EchoWebSocketListenerStop();
         WebSocket ws = client.newWebSocket(requestStop, listenerStop);
         client.dispatcher().executorService().shutdown();
@@ -419,8 +419,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 try {
                     String isi = output.getText().toString();
                     JSONObject OBJ = new JSONObject(isi);
-                        nilai = OBJ.optDouble("tekanan1", 0.0);
-                        nilai1 = OBJ.optDouble("tekanan2", 0.0);
+                        nilai = OBJ.optDouble("maskP", 0.0);
+                        nilai1 = OBJ.optDouble("flow", 0.0);
                         nilai2 = OBJ.optDouble("tekanan3", 0.0);
                         addEntry((float) nilai);
                         addEntry1((float) nilai1);

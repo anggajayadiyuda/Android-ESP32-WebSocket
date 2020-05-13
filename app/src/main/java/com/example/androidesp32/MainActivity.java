@@ -3,8 +3,10 @@ package com.example.androidesp32;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,19 +44,19 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     LineChart mChart;
     LineChart mChart1;
     String pesanutuh="";
+    int dataFI02, dataTidalVol, dataRespRate, dataPEEP, dataIERatio, dataMaxPlanPress = 0;
     double maskP, flow, PeakPress, PEEP, Tidal_Vol_INS, Tidal_Vol_EXP, Min_Vol_EXP = 0;
     public String pesan = "";
     public String pesanascii = "";
-    private Button start;
-    private Button stop;
-    private EditText editText;
+    private Button start, stop, ChangeParameter;
+    private EditText editText, FIO2, Tidal_Vol_Edit, Resp_Rate, PEEPSet, IERatio, MaxPlanPress;
     private TextView output;
     private TextView NilaiPeakPressure;
     private TextView PEEPText;
     private TextView INS_View, EXP_View, Min_View;
     private InputStream inputStream;
     private OkHttpClient client;
-    private WebSocket WebSocket;
+    WebSocket ws;
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -69,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     private class EchoWebSocketListener extends WebSocketListener {
         private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("1");
+        public void onOpen(WebSocket ws, Response response) {
+            ws.send("1");
+//            JSON_Parameter();
 //            webSocket.send("What's up ?");
 //            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
@@ -106,17 +109,62 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         setContentView(R.layout.activity_main);
 
         start = (Button) findViewById(R.id.start);
-        output = (TextView) findViewById(R.id.output);
         stop = (Button) findViewById(R.id.stop);
+        ChangeParameter = (Button) findViewById(R.id.ChangeParameter);
+
+        output = (TextView) findViewById(R.id.output);
         NilaiPeakPressure = (TextView) findViewById(R.id.NilaiPeakPressure);
         PEEPText = (TextView) findViewById(R.id.NilaiPEEP);
         INS_View = (TextView) findViewById(R.id.VolIns);
         EXP_View = (TextView) findViewById(R.id.VolExp);
         Min_View = (TextView) findViewById(R.id.MinuteVolExp);
 
-//        output.setMovementMethod(new ScrollingMovementMethod());
-//        editText = (EditText) findViewById(R.id.editText);
+        FIO2 = (EditText) findViewById(R.id.FIO2Edit);
+        Tidal_Vol_Edit = (EditText) findViewById(R.id.TidalVolEdit);
+        Resp_Rate = (EditText) findViewById(R.id.RespRateEdit);
+        PEEPSet = (EditText) findViewById(R.id.PEEPEdit);
+        IERatio = (EditText) findViewById(R.id.IERatioEdit);
+        MaxPlanPress = (EditText) findViewById(R.id.MaxPressEdit);
+
         client = new OkHttpClient();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int dataFIO2NEW =  prefs.getInt("dataFIO2", 0);
+        int dataTidalVolNEW = prefs.getInt("dataTidalVol", 0);
+        int dataRespRateNEW = prefs.getInt("dataRespRate", 0);
+        int dataPEEPNEW = prefs.getInt("dataPEEP", 0);
+        int dataIERatioNEW = prefs.getInt("dataIERatio", 0);
+        int dataMaxPlanPressNEW = prefs.getInt("dataMaxPlanPress", 0);
+
+        FIO2.setText(String.valueOf(dataFIO2NEW));
+        Tidal_Vol_Edit.setText(String.valueOf(dataTidalVolNEW));
+        Resp_Rate.setText(String.valueOf(dataRespRateNEW));
+        PEEPSet.setText(String.valueOf(dataPEEPNEW));
+        IERatio.setText(String.valueOf(dataIERatioNEW));
+        MaxPlanPress.setText(String.valueOf(dataMaxPlanPressNEW));
+
+        ChangeParameter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataFI02 = Integer.parseInt(FIO2.getText().toString());
+                dataTidalVol = Integer.parseInt(Tidal_Vol_Edit.getText().toString());
+                dataRespRate = Integer.parseInt(Resp_Rate.getText().toString());
+                dataPEEP = Integer.parseInt(PEEPSet.getText().toString());
+                dataIERatio = Integer.parseInt(IERatio.getText().toString());
+                dataMaxPlanPress = Integer.parseInt(MaxPlanPress.getText().toString());
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = prefs.edit();
+
+                editor.putInt("dataFIO2", dataFI02);
+                editor.putInt("dataTidalVol", dataTidalVol);
+                editor.putInt("dataRespRate", dataRespRate);
+                editor.putInt("dataPEEP", dataPEEP);
+                editor.putInt("dataIERation", dataIERatio);
+                editor.putInt("dataMaxPlanPress", dataMaxPlanPress);
+                editor.apply();
+                JSON_Parameter();
+            }
+        });
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,19 +369,27 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     public void start() {
         Request request = new Request.Builder().url("ws://192.168.137.188:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
-        WebSocket ws = client.newWebSocket(request, listener);
+        ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
     public void stop(){
-        JSONObject kirim=new JSONObject();
+        ws.close(1000,null);
+    }
+
+    public void JSON_Parameter(){
+        JSONObject Kirim_Parameter = new JSONObject();
         try {
-            kirim.put("data","Berhenti");
+            Kirim_Parameter.put("dataFIO2", dataFI02);
+            Kirim_Parameter.put("dataTidalVol", dataTidalVol);
+            Kirim_Parameter.put("dataRespRate", dataRespRate);
+            Kirim_Parameter.put("dataPEEP", dataPEEP);
+            Kirim_Parameter.put("dataIERation", dataIERatio);
+            Kirim_Parameter.put("dataMaxPlanPress", dataMaxPlanPress);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        WebSocket.send(kirim.toString());
-        WebSocket.close(1000,null);
+        ws.send(String.valueOf(Kirim_Parameter));
     }
 
     public void output(String txt) {

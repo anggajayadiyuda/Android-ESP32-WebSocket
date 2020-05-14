@@ -1,20 +1,25 @@
 package com.example.androidesp32;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
@@ -33,22 +38,24 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.lang.annotation.Repeatable;
 
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     LineChart mChart;
     LineChart mChart1;
     String pesanutuh="";
-    int dataFI02, dataTidalVol, dataRespRate, dataPEEP, dataIERatio, dataMaxPlanPress = 0;
+    int dataFI02, dataTidalVol, dataRespRate, dataPEEP, dataIERatio, dataMaxPlanPress;
     double maskP, flow, PeakPress, PEEP, Tidal_Vol_INS, Tidal_Vol_EXP, Min_Vol_EXP = 0;
     public String pesan = "";
     public String pesanascii = "";
-    private Button start, stop, ChangeParameter;
+    private Button start, stop, ChangeParameter, Spontaneous, Timed, Combined;
     private EditText editText, FIO2, Tidal_Vol_Edit, Resp_Rate, PEEPSet, IERatio, MaxPlanPress;
     private TextView output;
     private TextView NilaiPeakPressure;
@@ -57,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     private InputStream inputStream;
     private OkHttpClient client;
     WebSocket ws;
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+//    public static final String TEXT = "text";
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -111,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         start = (Button) findViewById(R.id.start);
         stop = (Button) findViewById(R.id.stop);
         ChangeParameter = (Button) findViewById(R.id.ChangeParameter);
+        Spontaneous  = (Button) findViewById(R.id.Spontaneous);
+        Timed = (Button) findViewById(R.id.Timed);
+        Combined = (Button) findViewById(R.id.Combined);
 
         output = (TextView) findViewById(R.id.output);
         NilaiPeakPressure = (TextView) findViewById(R.id.NilaiPeakPressure);
@@ -127,45 +140,81 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         MaxPlanPress = (EditText) findViewById(R.id.MaxPressEdit);
 
         client = new OkHttpClient();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int dataFIO2NEW =  prefs.getInt("dataFIO2", 0);
-        int dataTidalVolNEW = prefs.getInt("dataTidalVol", 0);
-        int dataRespRateNEW = prefs.getInt("dataRespRate", 0);
-        int dataPEEPNEW = prefs.getInt("dataPEEP", 0);
-        int dataIERatioNEW = prefs.getInt("dataIERatio", 0);
-        int dataMaxPlanPressNEW = prefs.getInt("dataMaxPlanPress", 0);
+        int FIO2NEW = prefs.getInt("dataFIO2", 0);
+        int TidalNEW = prefs.getInt("dataTidalVol", 0);
+        int RespNEW = prefs.getInt("dataRespRate", 0);
+        int PEEPNEW = prefs.getInt("dataPEEP", 0);
+        int IENEW = prefs.getInt("dataIERation", 0);
+        int MaxPlanNEW = prefs.getInt("dataMaxPlanPress", 0);
 
-        FIO2.setText(String.valueOf(dataFIO2NEW));
-        Tidal_Vol_Edit.setText(String.valueOf(dataTidalVolNEW));
-        Resp_Rate.setText(String.valueOf(dataRespRateNEW));
-        PEEPSet.setText(String.valueOf(dataPEEPNEW));
-        IERatio.setText(String.valueOf(dataIERatioNEW));
-        MaxPlanPress.setText(String.valueOf(dataMaxPlanPressNEW));
+        FIO2.setText(String.valueOf(FIO2NEW));
+        Tidal_Vol_Edit.setText(String.valueOf(TidalNEW));
+        Resp_Rate.setText(String.valueOf(RespNEW));
+        PEEPSet.setText(String.valueOf(PEEPNEW));
+        IERatio.setText(String.valueOf(IENEW));
+        MaxPlanPress.setText(String.valueOf(MaxPlanNEW));
 
         ChangeParameter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataFI02 = Integer.parseInt(FIO2.getText().toString());
-                dataTidalVol = Integer.parseInt(Tidal_Vol_Edit.getText().toString());
-                dataRespRate = Integer.parseInt(Resp_Rate.getText().toString());
-                dataPEEP = Integer.parseInt(PEEPSet.getText().toString());
-                dataIERatio = Integer.parseInt(IERatio.getText().toString());
-                dataMaxPlanPress = Integer.parseInt(MaxPlanPress.getText().toString());
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                SharedPreferences.Editor editor = prefs.edit();
-
-                editor.putInt("dataFIO2", dataFI02);
-                editor.putInt("dataTidalVol", dataTidalVol);
-                editor.putInt("dataRespRate", dataRespRate);
-                editor.putInt("dataPEEP", dataPEEP);
-                editor.putInt("dataIERation", dataIERatio);
-                editor.putInt("dataMaxPlanPress", dataMaxPlanPress);
-                editor.apply();
-                JSON_Parameter();
+                share_prefs();
             }
         });
 
+        Timed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    FIO2.setEnabled(true);
+                    FIO2.setTextColor(Color.parseColor("#64DD17"));
+                    Tidal_Vol_Edit.setEnabled(false);
+                    Tidal_Vol_Edit.setTextColor(Color.parseColor("#FF0000"));
+                    Resp_Rate.setEnabled(true);
+                    Resp_Rate.setTextColor(Color.parseColor("#64DD17"));
+                    PEEPSet.setEnabled(true);
+                    PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                    IERatio.setEnabled(true);
+                    IERatio.setTextColor(Color.parseColor("#64DD17"));
+                    MaxPlanPress.setEnabled(false);
+                    MaxPlanPress.setTextColor(Color.parseColor("#FF0000"));
+            }
+        });
+
+        Spontaneous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FIO2.setEnabled(true);
+                FIO2.setTextColor(Color.parseColor("#64DD17"));
+                Tidal_Vol_Edit.setEnabled(true);
+                Tidal_Vol_Edit.setTextColor(Color.parseColor("#64DD17"));
+                Resp_Rate.setEnabled(false);
+                Resp_Rate.setTextColor(Color.parseColor("#FF0000"));
+                PEEPSet.setEnabled(true);
+                PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                IERatio.setEnabled(false);
+                IERatio.setTextColor(Color.parseColor("#FF0000"));
+                MaxPlanPress.setEnabled(true);
+                MaxPlanPress.setTextColor(Color.parseColor("#64DD17"));
+            }
+        });
+
+        Combined.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FIO2.setEnabled(true);
+                FIO2.setTextColor(Color.parseColor("#64DD17"));
+                Tidal_Vol_Edit.setEnabled(true);
+                Tidal_Vol_Edit.setTextColor(Color.parseColor("#64DD17"));
+                Resp_Rate.setEnabled(true);
+                Resp_Rate.setTextColor(Color.parseColor("#64DD17"));
+                PEEPSet.setEnabled(true);
+                PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                IERatio.setEnabled(true);
+                IERatio.setTextColor(Color.parseColor("#64DD17"));
+                MaxPlanPress.setEnabled(true);
+                MaxPlanPress.setTextColor(Color.parseColor("#64DD17"));
+            }
+        });
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 start();
             }
         });
+
     chartmChart();
     chartmChart1();
 
@@ -242,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
     }
+
     public void chartmChart1(){
         mChart1 = findViewById(R.id.line_chart1);
         mChart1.setOnChartValueSelectedListener(this);
@@ -273,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         xl.setDrawGridLines(false);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
+//        xl.setLabelCount(10);
         YAxis leftAxis = mChart1.getAxisLeft();
 //        leftAxis.setTypeface(tfLight);
         leftAxis.setTextColor(Color.WHITE);
@@ -331,12 +383,12 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart.setVisibleXRangeMaximum(400);
+//            mChart.setVisibleXRangeMaximum(400);
             // move to the latest entry
+            mChart.setVisibleXRange(0,400);
             mChart.moveViewToX(data.getEntryCount());
             mChart.invalidate();
             // this automatically refreshes the chart (calls invalidate())
-            // chart.moveViewTo(data.getXValCount()-7, 55f,
             // AxisDependency.LEFT);
         }
     }
@@ -356,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart1.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart1.setVisibleXRangeMaximum(400);
+            mChart1.setVisibleXRange(0,400);
             // move to the latest entry
             mChart1.moveViewToX(data1.getEntryCount());
             mChart1.invalidate();
@@ -365,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // AxisDependency.LEFT);
         }
     }
+
 
     public void start() {
         Request request = new Request.Builder().url("ws://192.168.137.188:80/test").build();
@@ -390,6 +443,27 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             e.printStackTrace();
         }
         ws.send(String.valueOf(Kirim_Parameter));
+    }
+
+    public void share_prefs(){
+        dataFI02 = Integer.parseInt(String.valueOf(FIO2.getText()));
+        dataTidalVol = Integer.parseInt(String.valueOf(Tidal_Vol_Edit.getText()));
+        dataRespRate = Integer.parseInt(String.valueOf(Resp_Rate.getText()));
+        dataPEEP = Integer.parseInt(String.valueOf(PEEPSet.getText()));
+        dataIERatio = Integer.parseInt(String.valueOf(IERatio.getText()));
+        dataMaxPlanPress = Integer.parseInt(String.valueOf(MaxPlanPress.getText()));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putInt("dataFIO2", dataFI02);
+        editor.putInt("dataTidalVol", dataTidalVol);
+        editor.putInt("dataRespRate", dataRespRate);
+        editor.putInt("dataPEEP", dataPEEP);
+        editor.putInt("dataIERation", dataIERatio);
+        editor.putInt("dataMaxPlanPress", dataMaxPlanPress);
+        editor.apply();
+
+        Toast.makeText(this,"Data Terganti dan Tersimpan", Toast.LENGTH_SHORT).show();
     }
 
     public void output(String txt) {

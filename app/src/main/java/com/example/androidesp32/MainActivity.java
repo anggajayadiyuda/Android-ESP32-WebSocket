@@ -166,17 +166,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void onClick(View v) {
                     FIO2.setEnabled(true);
-                    FIO2.setTextColor(Color.parseColor("#64DD17"));
+                    FIO2.setTextColor(Color.parseColor("#FFFFFF"));
                     Tidal_Vol_Edit.setEnabled(false);
-                    Tidal_Vol_Edit.setTextColor(Color.parseColor("#FF0000"));
+                    Tidal_Vol_Edit.setTextColor(Color.parseColor("#E61725"));
                     Resp_Rate.setEnabled(true);
-                    Resp_Rate.setTextColor(Color.parseColor("#64DD17"));
+                    Resp_Rate.setTextColor(Color.parseColor("#FFFFFF"));
                     PEEPSet.setEnabled(true);
-                    PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                    PEEPSet.setTextColor(Color.parseColor("#FFFFFF"));
                     IERatio.setEnabled(true);
-                    IERatio.setTextColor(Color.parseColor("#64DD17"));
+                    IERatio.setTextColor(Color.parseColor("#FFFFFF"));
                     MaxPlanPress.setEnabled(false);
-                    MaxPlanPress.setTextColor(Color.parseColor("#FF0000"));
+                    MaxPlanPress.setTextColor(Color.parseColor("#E61725"));
             }
         });
 
@@ -184,17 +184,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void onClick(View v) {
                 FIO2.setEnabled(true);
-                FIO2.setTextColor(Color.parseColor("#64DD17"));
+                FIO2.setTextColor(Color.parseColor("#FFFFFF"));
                 Tidal_Vol_Edit.setEnabled(true);
-                Tidal_Vol_Edit.setTextColor(Color.parseColor("#64DD17"));
+                Tidal_Vol_Edit.setTextColor(Color.parseColor("#FFFFFF"));
                 Resp_Rate.setEnabled(false);
-                Resp_Rate.setTextColor(Color.parseColor("#FF0000"));
+                Resp_Rate.setTextColor(Color.parseColor("#E61725"));
                 PEEPSet.setEnabled(true);
-                PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                PEEPSet.setTextColor(Color.parseColor("#FFFFFF"));
                 IERatio.setEnabled(false);
-                IERatio.setTextColor(Color.parseColor("#FF0000"));
+                IERatio.setTextColor(Color.parseColor("#E61725"));
                 MaxPlanPress.setEnabled(true);
-                MaxPlanPress.setTextColor(Color.parseColor("#64DD17"));
+                MaxPlanPress.setTextColor(Color.parseColor("#FFFFFF"));
             }
         });
 
@@ -202,17 +202,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void onClick(View v) {
                 FIO2.setEnabled(true);
-                FIO2.setTextColor(Color.parseColor("#64DD17"));
+                FIO2.setTextColor(Color.parseColor("#FFFFFF"));
                 Tidal_Vol_Edit.setEnabled(true);
-                Tidal_Vol_Edit.setTextColor(Color.parseColor("#64DD17"));
+                Tidal_Vol_Edit.setTextColor(Color.parseColor("#FFFFFF"));
                 Resp_Rate.setEnabled(true);
-                Resp_Rate.setTextColor(Color.parseColor("#64DD17"));
+                Resp_Rate.setTextColor(Color.parseColor("#FFFFFF"));
                 PEEPSet.setEnabled(true);
-                PEEPSet.setTextColor(Color.parseColor("#64DD17"));
+                PEEPSet.setTextColor(Color.parseColor("#FFFFFF"));
                 IERatio.setEnabled(true);
-                IERatio.setTextColor(Color.parseColor("#64DD17"));
+                IERatio.setTextColor(Color.parseColor("#FFFFFF"));
                 MaxPlanPress.setEnabled(true);
-                MaxPlanPress.setTextColor(Color.parseColor("#64DD17"));
+                MaxPlanPress.setTextColor(Color.parseColor("#FFFFFF"));
             }
         });
         stop.setOnClickListener(new View.OnClickListener() {
@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.188:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.137.201:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();

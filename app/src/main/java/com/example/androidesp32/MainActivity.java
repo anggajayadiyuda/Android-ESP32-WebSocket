@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         @Override
         public void onOpen(WebSocket ws, Response response) {
             ws.send("1");
-//            JSON_Parameter();
 //            webSocket.send("What's up ?");
 //            webSocket.send(ByteString.decodeHex("deadbeef"));
 //            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
@@ -156,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void onClick(View v) {
                 share_prefs();
+//            JSON_Parameter();
+
             }
         });
 
@@ -442,6 +443,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             Kirim_Parameter.put("dataPEEP", dataPEEP);
             Kirim_Parameter.put("dataIERation", dataIERatio);
             Kirim_Parameter.put("dataMaxPlanPress", dataMaxPlanPress);
+            Toast.makeText(this,"Data Tersimpan", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -466,7 +468,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         editor.putInt("dataMaxPlanPress", dataMaxPlanPress);
         editor.apply();
 
-        Toast.makeText(this,"Data Terganti dan Tersimpan", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Data Terganti", Toast.LENGTH_SHORT).show();
     }
 
     public void output(String txt) {

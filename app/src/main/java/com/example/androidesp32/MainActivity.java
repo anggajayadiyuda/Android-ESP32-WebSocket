@@ -50,11 +50,8 @@ import java.lang.annotation.Repeatable;
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     LineChart mChart;
     LineChart mChart1;
-    String pesanutuh="";
     int dataFI02, dataTidalVol, dataRespRate, dataPEEP, dataIERatio, dataMaxPlanPress;
     double maskP, flow, PeakPress, PEEP, Tidal_Vol_INS, Tidal_Vol_EXP, Min_Vol_EXP = 0;
-    public String pesan = "";
-    public String pesanascii = "";
     private Button start, stop, ChangeParameter, Spontaneous, Timed, Combined;
     private EditText editText, FIO2, Tidal_Vol_Edit, Resp_Rate, PEEPSet, IERatio, MaxPlanPress;
     private TextView output;
@@ -177,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                     IERatio.setTextColor(Color.parseColor("#FFFFFF"));
                     MaxPlanPress.setEnabled(false);
                     MaxPlanPress.setTextColor(Color.parseColor("#E61725"));
+                Toast.makeText(MainActivity.this,"Terpilih Mode Timed", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -195,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 IERatio.setTextColor(Color.parseColor("#E61725"));
                 MaxPlanPress.setEnabled(true);
                 MaxPlanPress.setTextColor(Color.parseColor("#FFFFFF"));
+                Toast.makeText(MainActivity.this,"Terpilih Mode Spontaneous", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -213,12 +212,14 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
                 IERatio.setTextColor(Color.parseColor("#FFFFFF"));
                 MaxPlanPress.setEnabled(true);
                 MaxPlanPress.setTextColor(Color.parseColor("#FFFFFF"));
+                Toast.makeText(MainActivity.this,"Terpilih Mode Combined", Toast.LENGTH_SHORT).show();
             }
         });
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stop();
+                Toast.makeText(MainActivity.this,"Stop Minta Data", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -226,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             @Override
             public void onClick(View view) {
                 start();
+                Toast.makeText(MainActivity.this,"Mulai Minta Data", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -260,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart.setScaleEnabled(true);
         mChart.setDrawGridBackground(false);
         // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
+        mChart.setPinchZoom(true);
         // set an alternative background color
 //        mChart.setBackgroundColor(Color.BLACK);
         mChart.setDrawBorders(true);
@@ -306,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart1.setDragEnabled(true);
         mChart1.setScaleEnabled(true);
         mChart1.setDrawGridBackground(false);
-        mChart1.setPinchZoom(false);
+        mChart1.setPinchZoom(true);
 //        mChart1.setBackgroundColor(Color.BLACK);
         mChart1.setDrawBorders(true);
         mChart1.setBorderColor(Color.WHITE);

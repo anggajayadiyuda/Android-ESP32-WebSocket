@@ -91,15 +91,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:background="#222222"
         app:cardBackgroundColor="#181929"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/line_chart1"
         app:layout_constraintEnd_toStartOf="@+id/cardView1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/PeakPressure"
@@ -281,13 +279,13 @@
             android:layout_marginTop="570dp"
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
+            android:background="@drawable/rounded_box_view5"
             android:fontFamily="sans-serif-black"
             android:gravity="center"
             android:text="null"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="28dp"
-            android:background="@drawable/rounded_box_view5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

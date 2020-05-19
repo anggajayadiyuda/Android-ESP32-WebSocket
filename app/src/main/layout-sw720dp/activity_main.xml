@@ -517,7 +517,7 @@
             android:layout_marginRight="0dp"
             android:fontFamily="sans-serif-black"
             android:gravity="center_horizontal"
-            android:text="Max Planteau Pressure (cmH2O)"
+            android:text="Max Planteuau Pressure (cmH2O)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20dp"

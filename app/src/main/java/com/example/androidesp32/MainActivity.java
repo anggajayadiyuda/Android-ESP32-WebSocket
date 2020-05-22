@@ -34,6 +34,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+<<<<<<< Updated upstream
+=======
+import java.lang.annotation.Repeatable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+>>>>>>> Stashed changes
 
 
 public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
@@ -107,6 +113,51 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 //        output.setMovementMethod(new ScrollingMovementMethod());
 //        editText = (EditText) findViewById(R.id.editText);
         client = new OkHttpClient();
+<<<<<<< Updated upstream
+=======
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int FIO2NEW = prefs.getInt("dataFIO2", 0);
+        int TrigPress = prefs.getInt("dataTrigPres", 0);
+        int RespNEW = prefs.getInt("dataRespRate", 0);
+        int PEEPNEW = prefs.getInt("dataPEEP", 0);
+        int IENEW = prefs.getInt("dataIERatio", 0);
+        int MaxPlanNEW = prefs.getInt("dataMaxPres", 0);
+
+        FIO2.setText(String.valueOf(FIO2NEW));
+        Tidal_Vol_Edit.setText(String.valueOf(TrigPress));
+        Resp_Rate.setText(String.valueOf(RespNEW));
+        PEEPSet.setText(String.valueOf(PEEPNEW));
+        IERatio.setText(String.valueOf(IENEW));
+        MaxPlanPress.setText(String.valueOf(MaxPlanNEW));
+
+        ChangeParameter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                share_prefs();
+            JSON_Parameter();
+
+            }
+        });
+
+        Timed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    FIO2.setEnabled(true);
+                    FIO2.setTextColor(Color.parseColor("#FFFFFF"));
+                    Tidal_Vol_Edit.setEnabled(false);
+                    Tidal_Vol_Edit.setTextColor(Color.parseColor("#E61725"));
+                    Resp_Rate.setEnabled(true);
+                    Resp_Rate.setTextColor(Color.parseColor("#FFFFFF"));
+                    PEEPSet.setEnabled(true);
+                    PEEPSet.setTextColor(Color.parseColor("#FFFFFF"));
+                    IERatio.setEnabled(true);
+                    IERatio.setTextColor(Color.parseColor("#FFFFFF"));
+                    MaxPlanPress.setEnabled(false);
+                    MaxPlanPress.setTextColor(Color.parseColor("#E61725"));
+                Toast.makeText(MainActivity.this,"Terpilih Mode Timed", Toast.LENGTH_SHORT).show();
+            }
+        });
+>>>>>>> Stashed changes
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,9 +197,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart.setTouchEnabled(true);
         // enable scaling and dragging
         Description description = new Description();
+<<<<<<< Updated upstream
         description.setText("Data Tekanan Sensor 1");
+=======
+        description.setText("Mask Pressure");
+>>>>>>> Stashed changes
         description.setTextColor(Color.WHITE);
-        description.setTextSize(8);
+        description.setTextSize(20);
         mChart.setDescription(description);
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
@@ -185,6 +240,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         leftAxis.setDrawGridLines(true);
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
+
+
+
     }
     public void chartmChart1(){
         mChart1 = findViewById(R.id.line_chart1);
@@ -192,9 +250,13 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         mChart1.getDescription().setEnabled(false);
         mChart1.setTouchEnabled(true);
         Description description = new Description();
+<<<<<<< Updated upstream
         description.setText("Data Tekanan Sensor 2");
+=======
+        description.setText("Air Flow");
+>>>>>>> Stashed changes
         description.setTextColor(Color.WHITE);
-        description.setTextSize(8);
+        description.setTextSize(20);
         mChart1.setDescription(description);
         mChart1.setDragEnabled(true);
         mChart1.setScaleEnabled(true);
@@ -278,12 +340,17 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         set.setLineWidth(1f);
         set.setCircleRadius(4f);
         set.setFillAlpha(65);
+        set.setValueTextSize(20);
         set.setFillColor(ColorTemplate.getHoloBlue());
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setValueTextColor(Color.WHITE);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
         set.setDrawCircles(false);
+        //to make the smooth line as the graph is adrapt change so smooth curve
+//        createSet().setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//        //to enable the cubic density : if 1 then it will be sharp curve
+//        createSet().setCubicIntensity(0.2f);
         return set;
     }
     public LineDataSet createSet1() {
@@ -294,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         set1.setLineWidth(1f);
         set1.setCircleRadius(4f);
         set1.setFillAlpha(65);
+        set1.setValueTextSize(20);
         set1.setFillColor(ColorTemplate.getHoloBlue());
         set1.setHighLightColor(Color.rgb(244, 117, 117));
         set1.setValueTextColor(Color.WHITE);
@@ -320,6 +388,8 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
     public void addEntry(float value) {
         LineData data = mChart.getData();
+//        createSet().setMode(LineDataSet.Mode.CUBIC_BEZIER);
+////        createSet().setCubicIntensity(0.2f);
         if (data != null) {
             ILineDataSet set = data.getDataSetByIndex(0);
             // set.addEntry(...); // can be called as well
@@ -336,6 +406,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // limit the number of visible entries
             mChart.setVisibleXRangeMaximum(600);
             // move to the latest entry
+<<<<<<< Updated upstream
+=======
+            mChart.setVisibleXRangeMaximum(250);
+>>>>>>> Stashed changes
             mChart.moveViewToX(data.getEntryCount());
             mChart.invalidate();
             // this automatically refreshes the chart (calls invalidate())
@@ -359,7 +433,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart1.notifyDataSetChanged();
             // limit the number of visible entries
+<<<<<<< Updated upstream
             mChart1.setVisibleXRangeMaximum(600);
+=======
+            mChart1.setVisibleXRangeMaximum(250);
+>>>>>>> Stashed changes
             // move to the latest entry
             mChart1.moveViewToX(data1.getEntryCount());
             mChart1.invalidate();
@@ -396,7 +474,11 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
     }
 
     public void start() {
+<<<<<<< Updated upstream
         Request request = new Request.Builder().url("ws://192.168.137.158:80/test").build();
+=======
+        Request request = new Request.Builder().url("ws://192.168.43.230:80/test").build();
+>>>>>>> Stashed changes
         EchoWebSocketListener listener = new EchoWebSocketListener();
         WebSocket ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
@@ -411,6 +493,10 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
     public void output(String txt) {
         runOnUiThread(new Runnable() {
+<<<<<<< Updated upstream
+=======
+            @SuppressLint("SetText")
+>>>>>>> Stashed changes
             @Override
             public void run() {
                 output.setText(txt);

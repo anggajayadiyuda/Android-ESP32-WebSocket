@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
         int TrigPress = prefs.getInt("dataTrigPres", 0);
         int RespNEW = prefs.getInt("dataRespRate", 0);
         int PEEPNEW = prefs.getInt("dataPEEP", 0);
-        int IENEW = prefs.getInt("dataIERation", 0);
+        int IENEW = prefs.getInt("dataIERatio", 0);
         int MaxPlanNEW = prefs.getInt("dataMaxPres", 0);
 
         FIO2.setText(String.valueOf(FIO2NEW));
@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // limit the number of visible entries
 //            mChart.setVisibleXRangeMaximum(400);
             // move to the latest entry
-            mChart.setVisibleXRangeMaximum(150);
+            mChart.setVisibleXRange(200, 200);
             mChart.moveViewToX(data.getEntryCount());
             mChart.invalidate();
             // this automatically refreshes the chart (calls invalidate())
@@ -414,7 +414,9 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
             // let the chart know it's data has changed
             mChart1.notifyDataSetChanged();
             // limit the number of visible entries
-            mChart1.setVisibleXRangeMaximum(150);
+//            mChart1.setVisibleXRangeMaximum(150);
+            mChart1.setVisibleXRange(200, 200);
+//            mChart1.setVisibleYRange();
             // move to the latest entry
             mChart1.moveViewToX(data1.getEntryCount());
             mChart1.invalidate();
@@ -426,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements OnChartValueSelec
 
 
     public void start() {
-        Request request = new Request.Builder().url("ws://192.168.137.201:80/test").build();
+        Request request = new Request.Builder().url("ws://192.168.43.230:80/test").build();
         EchoWebSocketListener listener = new EchoWebSocketListener();
         ws = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
